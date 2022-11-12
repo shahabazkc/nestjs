@@ -1,16 +1,24 @@
-import { Controller, Get, Post } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { ApplicationValue, AppService, UpdateApplication } from './app.service';
 
-@Controller()
+@Controller('v1')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('/applications')
+  getAllApplications(): ApplicationValue[] {
+    return this.appService.getAllApplications();
   }
-  @Post()
-  postHello(txt: string): string {
-    return this.appService.postHello(txt);
+  @Post('/create-application')
+  addApplications(@Body() obj: UpdateApplication): ApplicationValue {
+    return this.appService.addApplication(obj);
+  }
+  @Put('/update-application')
+  updateApplication(@Body() obj: ApplicationValue): ApplicationValue {
+    try {
+      return this.appService.updateApplication(obj)
+    } catch (error) {
+      return error
+    }
   }
 }
